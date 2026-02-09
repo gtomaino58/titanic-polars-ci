@@ -21,6 +21,20 @@ from src.ejercicio1 import (
     e1_add_is_minor,
 )
 
+from src.ejercicio2 import (
+    load_pasajeros,
+    load_supervivientes,
+    build_df,
+    add_puerto,
+    passengers_by_puerto,
+    passengers_by_sex as e2_passengers_by_sex,
+    mean_age_by_sex_survived,
+    deaths_by_age_range,
+    deaths_by_class_gender,
+    survived_and_deaths_by_puerto,
+    join_quality,
+)
+
 from src.io_utils import save_table, save_text
 
 from src.plots import (
@@ -160,6 +174,51 @@ def run_ejercicio1(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
 
     return sections
 
+def run_ejercicio2(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
+    sections: list[str] = []
+    sections.append("\n## Ejercicio 2 — Pasajeros + Supervivientes (inner join)\n")
+
+    df_p = load_pasajeros(data_dir)
+    df_s = load_supervivientes(data_dir)
+
+    df_joined = build_df(data_dir)
+    df = add_puerto(df_joined)
+
+    # Diagnóstico join (muy importante porque tus tamaños no coinciden)
+    save_table(join_quality(df_p, df_s, df_joined), dirs["tables"] / "e2_join_quality.csv")
+    sections.append("- Join quality: `outputs/tables/e2_join_quality.csv`")
+
+    # (1) puerto
+    # (guardamos un ejemplo de columnas para ver que existe)
+    save_table(df.select(["PassengerId", "Embarked", "puerto"]).head(20), dirs["tables"] / "e2_01_puerto_sample.csv")
+    sections.append("- (1) Columna puerto (sample): `outputs/tables/e2_01_puerto_sample.csv`")
+
+    # (2)
+    save_table(passengers_by_puerto(df), dirs["tables"] / "e2_02_passengers_by_puerto.csv")
+    sections.append("- (2) Nº pasajeros por puerto: `outputs/tables/e2_02_passengers_by_puerto.csv`")
+
+    # (3)
+    save_table(e2_passengers_by_sex(df), dirs["tables"] / "e2_03_passengers_by_sex.csv")
+    sections.append("- (3) Nº hombres y mujeres: `outputs/tables/e2_03_passengers_by_sex.csv`")
+
+    # (4)
+    save_table(mean_age_by_sex_survived(df), dirs["tables"] / "e2_04_mean_age_by_sex_survived.csv")
+    sections.append("- (4) Edad media por sexo y supervivencia: `outputs/tables/e2_04_mean_age_by_sex_survived.csv`")
+
+    # (5)
+    save_table(deaths_by_age_range(df), dirs["tables"] / "e2_05_deaths_by_age_range.csv")
+    sections.append("- (5) Muertos por rango de edad: `outputs/tables/e2_05_deaths_by_age_range.csv`")
+
+    # (6)
+    save_table(deaths_by_class_gender(df), dirs["tables"] / "e2_06_deaths_by_class_gender.csv")
+    sections.append("- (6) Muertos por clase y género: `outputs/tables/e2_06_deaths_by_class_gender.csv`")
+
+    # (7)
+    save_table(survived_and_deaths_by_puerto(df), dirs["tables"] / "e2_07_survived_and_deaths_by_puerto.csv")
+    sections.append("- (7) Muertos y supervivientes por puerto: `outputs/tables/e2_07_survived_and_deaths_by_puerto.csv`")
+
+    return sections
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Práctica Titanic sin pandas (Polars).")
@@ -173,6 +232,7 @@ def main() -> int:
 
     sections = []
     sections.extend(run_ejercicio1(data_dir, dirs))
+    sections.extend(run_ejercicio2(data_dir, dirs))
 
     write_report_stub(base, dirs, sections)
 

@@ -1,6 +1,6 @@
 # Práctica Titanic (Polars) — Informe
 
-Generado automáticamente: **2026-02-09 20:49:43**
+Generado automáticamente: **2026-02-09 21:04:29**
 
 ## Outputs
 - Figuras: `C:/Users/gtoma/Downloads/Comp_Mod_Distr/titanic-polars-ci/outputs/figures`
@@ -25,3 +25,14 @@ Generado automáticamente: **2026-02-09 20:49:43**
 - (16) Distribución edad (hist + densidad): `outputs/figures/e1_16_age_hist_kde.png`
 - (17) Histograma edad (alt): `outputs/figures/e1_17_age_hist_alt.png`
 - (18) Menores de 16 (columna IsMinor16) — recuento: `outputs/tables/e1_18_minor16_counts.csv`
+
+## Ejercicio 2 — Pasajeros + Supervivientes (inner join)
+
+- Join quality: `outputs/tables/e2_join_quality.csv`
+- (1) Columna puerto (sample): `outputs/tables/e2_01_puerto_sample.csv`
+- (2) Nº pasajeros por puerto: `outputs/tables/e2_02_passengers_by_puerto.csv`
+- (3) Nº hombres y mujeres: `outputs/tables/e2_03_passengers_by_sex.csv`
+- (4) Edad media por sexo y supervivencia: `outputs/tables/e2_04_mean_age_by_sex_survived.csv`
+- (5) Muertos por rango de edad: `outputs/tables/e2_05_deaths_by_age_range.csv`
+- (6) Muertos por clase y género: `outputs/tables/e2_06_deaths_by_class_gender.csv`
+- (7) Muertos y supervivientes por puerto: `outputs/tables/e2_07_survived_and_deaths_by_puerto.csv`
