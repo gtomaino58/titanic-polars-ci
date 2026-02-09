@@ -16,7 +16,16 @@ from src.ejercicio1 import (
     e1_sex_by_class,
     e1_survived_by_class_sex,
 )
+
 from src.io_utils import save_table, save_text
+
+from src.plots import (
+    bar_counts,
+    bar_counts_hue,
+    survived_vs_not,
+    age_hist_with_kde,
+    age_hist_alt,
+)
 
 
 def ensure_dirs(base: Path) -> dict[str, Path]:
@@ -68,17 +77,60 @@ def run_ejercicio1(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
     save_table(e1_passengers_by_class(df), dirs["tables"] / "e1_by_class.csv")
     sections.append("- (4) Nº pasajeros por clase: `outputs/tables/e1_by_class.csv`")
 
+     # 5) plot pasajeros por clase
+    bar_counts(
+        e1_passengers_by_class(df),
+        x_col="Pclass",
+        y_col="count",
+        title="Recuento de pasajeros por clase",
+        figpath=dirs["figures"] / "e1_05_passengers_by_class.png",
+    )
+    sections.append("- (5) Plot pasajeros por clase: `outputs/figures/e1_05_passengers_by_class.png`")
+
     # 6) por sexo
     save_table(e1_passengers_by_sex(df), dirs["tables"] / "e1_by_sex.csv")
     sections.append("- (6) Nº pasajeros por sexo: `outputs/tables/e1_by_sex.csv`")
+
+    # 7) plot hombres vs mujeres
+    bar_counts(
+        e1_passengers_by_sex(df),
+        x_col="Sex",
+        y_col="count",
+        title="Recuento de pasajeros por sexo",
+        figpath=dirs["figures"] / "e1_07_passengers_by_sex.png",
+    )
+    sections.append("- (7) Plot pasajeros por sexo: `outputs/figures/e1_07_passengers_by_sex.png`")
 
     # 8) sexo por clase
     save_table(e1_sex_by_class(df), dirs["tables"] / "e1_sex_by_class.csv")
     sections.append("- (8) Nº hombres/mujeres por clase: `outputs/tables/e1_sex_by_class.csv`")
 
+    # 9) plot sexo por clase (barras agrupadas)
+    bar_counts_hue(
+        e1_sex_by_class(df),
+        x_col="Pclass",
+        hue_col="Sex",
+        y_col="count",
+        title="Recuento por clase y sexo",
+        figpath=dirs["figures"] / "e1_09_sex_by_class.png",
+    )
+    sections.append("- (9) Plot por sexo y clase: `outputs/figures/e1_09_sex_by_class.png`")
+
     # 10) sobrevivientes por clase/sexo (con Survived)
     save_table(e1_survived_by_class_sex(df), dirs["tables"] / "e1_surv_by_class_sex.csv")
     sections.append("- (10) Supervivencia por clase/sexo: `outputs/tables/e1_surv_by_class_sex.csv`")
+
+     # 11) plot sobrevivieron vs no
+    survived_vs_not(df, dirs["figures"] / "e1_11_survived_vs_not.png")
+    sections.append("- (11) Plot supervivencia (Sí/No): `outputs/figures/e1_11_survived_vs_not.png`")
+
+    # 16) distribución edad hist + densidad (tras eliminar nulos)
+    age_hist_with_kde(df, dirs["figures"] / "e1_16_age_hist_kde.png")
+    sections.append("- (16) Distribución edad (hist + densidad): `outputs/figures/e1_16_age_hist_kde.png`")
+
+    # 17) hist alternativo
+    age_hist_alt(df, dirs["figures"] / "e1_17_age_hist_alt.png")
+    sections.append("- (17) Histograma edad (alt): `outputs/figures/e1_17_age_hist_alt.png`")
 
     return sections
 
@@ -104,3 +156,16 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+
+
+#######################################################################################
+
+   
+
+    
+
+    
+
+   

@@ -57,3 +57,15 @@ def e1_survived_by_class_sex(df: pl.DataFrame) -> pl.DataFrame:
         .sort(["Pclass", "Sex", "Survived"])
     )
     return grouped
+
+def e1_counts_for_class_plot(df: pl.DataFrame) -> pl.DataFrame:
+    # para plot #5
+    return e1_passengers_by_class(df)
+
+def e1_counts_for_sex_plot(df: pl.DataFrame) -> pl.DataFrame:
+    # para plot #7
+    return e1_passengers_by_sex(df)
+
+def e1_counts_for_sex_class_plot(df: pl.DataFrame) -> pl.DataFrame:
+    # para plot #9 (sexo + clase)
+    return e1_sex_by_class(df)
