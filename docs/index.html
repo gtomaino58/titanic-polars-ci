@@ -6,25 +6,45 @@
   <title>Práctica Titanic — Report</title>
   <style>
     body{
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      max-width:980px;margin:40px auto;padding:0 16px;line-height:1.55
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      max-width: 980px;
+      margin: 40px auto;
+      padding: 0 16px;
+      line-height: 1.55;
+      color: #111;
     }
     h1{margin-bottom:0}
     .sub{color:#555;margin-top:6px}
     .card{
-      border:1px solid #e5e7eb;border-radius:14px;
-      padding:16px 18px;margin:16px 0
+      border:1px solid #e5e7eb;
+      border-radius:14px;
+      padding:16px 18px;
+      margin:16px 0;
+      background:#fff;
     }
     code,pre{background:#f6f8fa;border-radius:8px}
     pre{padding:12px;overflow:auto}
     a{color:#0969da;text-decoration:none}
     a:hover{text-decoration:underline}
     ul{margin:8px 0 0 18px}
+    .tag{
+      display:inline-block;
+      font-size:12px;
+      padding:2px 8px;
+      border-radius:999px;
+      background:#eef2ff;
+      color:#3730a3;
+      margin-left:8px;
+    }
   </style>
 </head>
+
 <body>
+
   <h1>Práctica Titanic — Report</h1>
-  <div class="sub">CI (GitHub Actions) · Reproducible · Sin pandas · Sin notebooks</div>
+  <div class="sub">
+    CI (GitHub Actions) · GitHub Pages · Reproducible · Sin pandas · Sin notebooks
+  </div>
 
   <div class="card">
     <h2>Informe de entrega (profesor)</h2>
@@ -33,8 +53,12 @@
         <a href="../Practica%20Titanic%20Report%20Final.txt">
           Practica Titanic Report Final.txt
         </a>
+        <span class="tag">Entrega</span>
       </li>
     </ul>
+    <p>
+      Informe narrativo final, redactado para la entrega académica.
+    </p>
   </div>
 
   <div class="card">
@@ -44,11 +68,34 @@
         <a href="../INFORME_FINAL.md">
           INFORME_FINAL.md
         </a>
+        <span class="tag">Auto</span>
       </li>
     </ul>
     <p>
-      Este informe se genera automáticamente al ejecutar el pipeline
+      Generado automáticamente al ejecutar el pipeline
       (<code>python -m src.main</code>).
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Resultados publicados</h2>
+    <p>
+      Las siguientes carpetas se actualizan automáticamente en cada ejecución
+      correcta del workflow de GitHub Actions:
+    </p>
+    <ul>
+      <li>
+        <a href="./figures/">Figuras</a>
+        <span class="tag">PNG</span>
+      </li>
+      <li>
+        <a href="./tables/">Tablas</a>
+        <span class="tag">CSV</span>
+      </li>
+    </ul>
+    <p>
+      Cada <em>push</em> al repositorio ejecuta el análisis completo y publica
+      aquí los nuevos resultados.
     </p>
   </div>
 
@@ -59,17 +106,17 @@ python -m src.main</code></pre>
   </div>
 
   <div class="card">
-    <h2>Resultados (tablas y figuras)</h2>
+    <h2>Automatización</h2>
     <p>
-      Las tablas y figuras se generan en cada ejecución del workflow y se
-      adjuntan como <strong>artifacts</strong>:
+      El proyecto utiliza <strong>GitHub Actions</strong> para ejecutar el
+      pipeline completo (Ejercicio 1 + Ejercicio 2) en un entorno limpio,
+      generando tablas, figuras e informes de forma reproducible.
     </p>
-    <ul>
-      <li>
-        GitHub → pestaña <strong>Actions</strong> → último run →
-        <strong>Artifacts</strong> → <code>practica-outputs</code>
-      </li>
-    </ul>
+    <p>
+      Los resultados también se adjuntan como <strong>artifacts</strong> en cada
+      ejecución del workflow.
+    </p>
   </div>
+
 </body>
 </html>
