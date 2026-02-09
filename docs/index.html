@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Práctica Titanic — Report</title>
+  <style>
+    body{
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      max-width:980px;margin:40px auto;padding:0 16px;line-height:1.55
+    }
+    h1{margin-bottom:0}
+    .sub{color:#555;margin-top:6px}
+    .card{
+      border:1px solid #e5e7eb;border-radius:14px;
+      padding:16px 18px;margin:16px 0
+    }
+    code,pre{background:#f6f8fa;border-radius:8px}
+    pre{padding:12px;overflow:auto}
+    a{color:#0969da;text-decoration:none}
+    a:hover{text-decoration:underline}
+    ul{margin:8px 0 0 18px}
+  </style>
+</head>
+<body>
+  <h1>Práctica Titanic — Report</h1>
+  <div class="sub">CI (GitHub Actions) · Reproducible · Sin pandas · Sin notebooks</div>
+
+  <div class="card">
+    <h2>Informe de entrega (profesor)</h2>
+    <ul>
+      <li>
+        <a href="../Practica%20Titanic%20Report%20Final.txt">
+          Practica Titanic Report Final.txt
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Informe automático</h2>
+    <ul>
+      <li>
+        <a href="../INFORME_FINAL.md">
+          INFORME_FINAL.md
+        </a>
+      </li>
+    </ul>
+    <p>
+      Este informe se genera automáticamente al ejecutar el pipeline
+      (<code>python -m src.main</code>).
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Cómo ejecutar localmente</h2>
+    <pre><code>pip install -r requirements.txt
+python -m src.main</code></pre>
+  </div>
+
+  <div class="card">
+    <h2>Resultados (tablas y figuras)</h2>
+    <p>
+      Las tablas y figuras se generan en cada ejecución del workflow y se
+      adjuntan como <strong>artifacts</strong>:
+    </p>
+    <ul>
+      <li>
+        GitHub → pestaña <strong>Actions</strong> → último run →
+        <strong>Artifacts</strong> → <code>practica-outputs</code>
+      </li>
+    </ul>
+  </div>
+</body>
+</html>
