@@ -1,0 +1,94 @@
+# Práctica Titanic — Análisis de Datos sin pandas
+
+1. Introducción
+2. Metodología y herramientas
+3. Ejercicio 1 — Dataset Titanic
+   3.1 Análisis exploratorio
+   3.2 Visualización
+   3.3 Limpieza y transformaciones
+4. Ejercicio 2 — Join Pasajeros y Supervivientes
+5. Reproducibilidad
+6. Conclusiones
+
+## 1. Introducción
+
+El objetivo de esta práctica es realizar un análisis exploratorio y descriptivo de los datos de los pasajeros del Titanic,
+aplicando operaciones de agregación, filtrado y visualización, siguiendo estrictamente las restricciones indicadas en clase.
+
+En particular, el desarrollo se ha realizado **sin utilizar la librería pandas** y sin emplear notebooks interactivos,
+implementando todo el flujo como un **programa Python reproducible**, apoyado en la librería **Polars** para el tratamiento
+de datos.
+
+## 2. Metodología y herramientas
+
+- Lenguaje: Python
+- Procesamiento de datos: Polars
+- Visualización: matplotlib
+- Organización: ejecución no interactiva mediante `python -m src.main`
+
+Todas las tablas y figuras se generan automáticamente al ejecutar el programa, y se almacenan en las carpetas
+`outputs/tables` y `outputs/figures` respectivamente.
+
+## 3. Ejercicio 1 — Dataset Titanic
+
+### 3.1 Análisis exploratorio
+
+- (1) Primeras filas del dataset: `outputs/tables/e1_head.csv`
+- (2) Columnas del dataset: `outputs/tables/e1_columns.txt`
+- (3) Información y valores nulos: `outputs/tables/e1_info.csv`
+- (4) Número de pasajeros por clase: `outputs/tables/e1_by_class.csv`
+- (6) Número de pasajeros por sexo: `outputs/tables/e1_by_sex.csv`
+- (8) Número de hombres y mujeres por clase: `outputs/tables/e1_sex_by_class.csv`
+- (10) Supervivencia por clase y sexo: `outputs/tables/e1_surv_by_class_sex.csv`
+- (12) Total de pasajeros que no sobrevivieron: `outputs/tables/e1_12_total_not_survived.csv`
+- (13) No supervivientes por clase y sexo: `outputs/tables/e1_13_not_surv_by_class_sex.csv`
+- (14) Supervivieron y no por clase y sexo: `outputs/tables/e1_14_surv_and_not_by_class_sex.csv`
+
+### 3.2 Visualización
+
+Las visualizaciones se han generado sin utilizar seaborn ni pandas, empleando exclusivamente matplotlib:
+
+- (5) Recuento de pasajeros por clase: `outputs/figures/e1_05_passengers_by_class.png`
+- (7) Recuento de pasajeros por sexo: `outputs/figures/e1_07_passengers_by_sex.png`
+- (9) Recuento por clase y sexo: `outputs/figures/e1_09_sex_by_class.png`
+- (11) Supervivieron vs no sobrevivieron: `outputs/figures/e1_11_survived_vs_not.png`
+- (16) Distribución de edad (histograma + densidad): `outputs/figures/e1_16_age_hist_kde.png`
+- (17) Histograma alternativo de edades: `outputs/figures/e1_17_age_hist_alt.png`
+
+### 3.3 Limpieza y transformaciones
+
+- (15) Eliminación de registros con edad nula.  
+  Resumen del número de filas antes y después:  
+  `outputs/tables/e1_15_dropna_age_summary.csv`
+
+- (18) Creación de una función para identificar menores de 16 años.  
+  Recuento de menores y no menores:  
+  `outputs/tables/e1_18_minor16_counts.csv`
+
+## 4. Ejercicio 2 — Pasajeros y Supervivientes
+
+Se ha construido un DataFrame mediante un **inner join** por el campo `PassengerId`.
+
+- Diagnóstico del join: `outputs/tables/e2_join_quality.csv`
+- (1) Columna puerto (nombre completo): `outputs/tables/e2_01_puerto_sample.csv`
+- (2) Número de pasajeros por puerto: `outputs/tables/e2_02_passengers_by_puerto.csv`
+- (3) Número de hombres y mujeres: `outputs/tables/e2_03_passengers_by_sex.csv`
+- (4) Edad media por sexo y supervivencia: `outputs/tables/e2_04_mean_age_by_sex_survived.csv`
+- (5) Muertos por rango de edad: `outputs/tables/e2_05_deaths_by_age_range.csv`
+- (6) Muertos por clase y género: `outputs/tables/e2_06_deaths_by_class_gender.csv`
+- (7) Muertos y supervivientes por puerto: `outputs/tables/e2_07_survived_and_deaths_by_puerto.csv`
+
+## 5. Reproducibilidad
+
+La práctica es completamente reproducible.  
+Ejecutando el comando:
+
+python -m src.main
+
+## 6. Conclusiones
+
+El análisis confirma la influencia de variables como la clase social, el sexo y la edad en la supervivencia
+de los pasajeros del Titanic.
+
+La práctica demuestra la viabilidad de realizar análisis de datos completos sin recurrir a pandas ni a entornos
+interactivos, aplicando un enfoque reproducible y estructurado.
