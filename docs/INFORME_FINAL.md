@@ -1,10 +1,10 @@
 # Práctica Titanic (Polars) — Informe
 
-Generado automáticamente: **2026-02-09 21:59:20**
+Generado automáticamente: **2026-02-09 22:29:21**
 
 ## Outputs
-- Figuras: `C:/Users/gtoma/Downloads/Comp_Mod_Distr/titanic-polars-ci/outputs/figures`
-- Tablas: `C:/Users/gtoma/Downloads/Comp_Mod_Distr/titanic-polars-ci/outputs/tables`
+- Figuras: `/home/runner/work/titanic-polars-ci/titanic-polars-ci/outputs/figures`
+- Tablas: `/home/runner/work/titanic-polars-ci/titanic-polars-ci/outputs/tables`
 
 ## Ejercicio 1 — Titanic
 

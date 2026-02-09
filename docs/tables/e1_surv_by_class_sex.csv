@@ -1,0 +1,13 @@
+Pclass,Sex,Survived,count
+1,female,0,3
+1,female,1,91
+1,male,0,77
+1,male,1,45
+2,female,0,6
+2,female,1,70
+2,male,0,91
+2,male,1,17
+3,female,0,72
+3,female,1,72
+3,male,0,300
+3,male,1,47

@@ -1,0 +1,13 @@
+column,dtype,nulls
+PassengerId,Int64,0
+Survived,Int64,0
+Pclass,Int64,0
+Name,String,0
+Sex,String,0
+Age,Float64,177
+SibSp,Int64,0
+Parch,Int64,0
+Ticket,String,0
+Fare,Float64,0
+Cabin,String,687
+Embarked,String,2
