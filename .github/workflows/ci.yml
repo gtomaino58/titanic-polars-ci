@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   run:
@@ -30,19 +30,40 @@ jobs:
         run: |
           python -m src.main
 
-      - name: Upload artifacts (outputs + report)
+      - name: Publish outputs to docs (Pages)
+        run: |
+          rm -rf docs/figures docs/tables
+          mkdir -p docs/figures docs/tables
+
+          # Copiar outputs
+          cp -r outputs/figures/* docs/figures/ || true
+          cp -r outputs/tables/* docs/tables/ || true
+
+          # Copiar informe automático a docs (Pages)
+          cp INFORME_FINAL.md docs/INFORME_FINAL.md || true
+
+          # Copiar informe de entrega (si existe en la raíz)
+          cp "Practica_Titanic_Informe_Final.txt" "docs/Practica_Titanic_Informe_Final.txt" || true
+
+      - name: Commit published outputs to docs
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          # Añadimos solo lo que Pages necesita (y los informes dentro de docs)
+          git add docs/figures docs/tables docs/INFORME_FINAL.md docs/Practica_Titanic_Informe_Final.txt docs/index.html
+
+          # Commit solo si hay cambios
+          git commit -m "Pages: update published outputs" || echo "No changes to commit"
+
+          # Push a main para que Pages sirva los nuevos contenidos
+          git push
+
+      - name: Upload artifacts (outputs + informes)
         uses: actions/upload-artifact@v4
         with:
           name: practica-outputs
           path: |
             outputs
             INFORME_FINAL.md
-            Practica Titanic Report Final.txt
-
-      - name: Publish outputs to docs (Pages)
-        run: |
-          rm -rf docs/figures docs/tables
-          mkdir -p docs/figures docs/tables
-          cp -r outputs/figures/* docs/figures/ || true
-          cp -r outputs/tables/* docs/tables/ || true
-
+            Practica_Titanic_Informe_Final.txt
