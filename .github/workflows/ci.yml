@@ -34,6 +34,7 @@ jobs:
 
       - name: Publish outputs to docs (Pages)
         run: |
+          # Re-crear carpetas publicadas
           rm -rf docs/figures docs/tables
           mkdir -p docs/figures docs/tables
 
@@ -41,24 +42,49 @@ jobs:
           cp -r outputs/figures/* docs/figures/ || true
           cp -r outputs/tables/* docs/tables/ || true
 
-          # Copiar informe automático a docs (Pages)
+          # Copiar informe automático a docs
           cp INFORME_FINAL.md docs/INFORME_FINAL.md || true
 
-          # Copiar informe de entrega (si existe en la raíz)
+          # Copiar informe de entrega a docs (si existe en raíz)
           cp "Practica_Titanic_Informe_Final.txt" "docs/Practica_Titanic_Informe_Final.txt" || true
+
+          # Generar index.html para evitar 404 al navegar a /figures y /tables
+          cat > docs/figures/index.html <<'EOF'
+          <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+          <title>Figuras</title><style>body{font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:980px;margin:40px auto;padding:0 16px}li{margin:6px 0}a{color:#0969da;text-decoration:none}a:hover{text-decoration:underline}</style></head>
+          <body><h1>Figuras (PNG)</h1><p><a href="../index.html">← Volver</a></p><ul>
+          EOF
+          for f in docs/figures/*.png; do
+            [ -e "$f" ] || continue
+            bn=$(basename "$f")
+            echo "<li><a href=\"./$bn\">$bn</a></li>" >> docs/figures/index.html
+          done
+          echo "</ul></body></html>" >> docs/figures/index.html
+
+          cat > docs/tables/index.html <<'EOF'
+          <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+          <title>Tablas</title><style>body{font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:980px;margin:40px auto;padding:0 16px}li{margin:6px 0}a{color:#0969da;text-decoration:none}a:hover{text-decoration:underline}</style></head>
+          <body><h1>Tablas (CSV/TXT)</h1><p><a href="../index.html">← Volver</a></p><ul>
+          EOF
+          for f in docs/tables/*; do
+            [ -e "$f" ] || continue
+            bn=$(basename "$f")
+            echo "<li><a href=\"./$bn\">$bn</a></li>" >> docs/tables/index.html
+          done
+          echo "</ul></body></html>" >> docs/tables/index.html
 
       - name: Commit published outputs to docs
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          # Añadimos solo lo que Pages necesita
+          # Añadimos todo lo publicado
           git add docs/figures docs/tables docs/INFORME_FINAL.md docs/Practica_Titanic_Informe_Final.txt docs/index.html
 
           # Commit solo si hay cambios
           git commit -m "Pages: update published outputs [skip ci]" || echo "No changes to commit"
 
-          # Push a main (esto actualiza Pages)
+          # Push para que Pages sirva los nuevos contenidos
           git push
 
       - name: Upload artifacts (outputs + informes)
