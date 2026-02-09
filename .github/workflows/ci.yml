@@ -10,6 +10,8 @@ permissions:
 
 jobs:
   run:
+    # Anti-loop: no ejecutar si el push lo hace github-actions
+    if: ${{ github.actor != 'github-actions' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -50,13 +52,13 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          # Añadimos solo lo que Pages necesita (y los informes dentro de docs)
+          # Añadimos solo lo que Pages necesita
           git add docs/figures docs/tables docs/INFORME_FINAL.md docs/Practica_Titanic_Informe_Final.txt docs/index.html
 
           # Commit solo si hay cambios
-          git commit -m "Pages: update published outputs" || echo "No changes to commit"
+          git commit -m "Pages: update published outputs [skip ci]" || echo "No changes to commit"
 
-          # Push a main para que Pages sirva los nuevos contenidos
+          # Push a main (esto actualiza Pages)
           git push
 
       - name: Upload artifacts (outputs + informes)
