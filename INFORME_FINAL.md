@@ -1,6 +1,6 @@
 # Práctica Titanic (Polars) — Informe
 
-Generado automáticamente: **2026-02-09 20:40:41**
+Generado automáticamente: **2026-02-09 20:49:43**
 
 ## Outputs
 - Figuras: `C:/Users/gtoma/Downloads/Comp_Mod_Distr/titanic-polars-ci/outputs/figures`
@@ -19,5 +19,9 @@ Generado automáticamente: **2026-02-09 20:40:41**
 - (9) Plot por sexo y clase: `outputs/figures/e1_09_sex_by_class.png`
 - (10) Supervivencia por clase/sexo: `outputs/tables/e1_surv_by_class_sex.csv`
 - (11) Plot supervivencia (Sí/No): `outputs/figures/e1_11_survived_vs_not.png`
+- (12) Total no sobrevivieron: `outputs/tables/e1_12_total_not_survived.csv`
+- (13) No sobrevivieron por clase/sexo: `outputs/tables/e1_13_not_surv_by_class_sex.csv`
+- (14) Sobrevivieron/No por clase/sexo: `outputs/tables/e1_14_surv_and_not_by_class_sex.csv`
 - (16) Distribución edad (hist + densidad): `outputs/figures/e1_16_age_hist_kde.png`
 - (17) Histograma edad (alt): `outputs/figures/e1_17_age_hist_alt.png`
+- (18) Menores de 16 (columna IsMinor16) — recuento: `outputs/tables/e1_18_minor16_counts.csv`

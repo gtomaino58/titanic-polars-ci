@@ -15,6 +15,10 @@ from src.ejercicio1 import (
     e1_passengers_by_sex,
     e1_sex_by_class,
     e1_survived_by_class_sex,
+    e1_total_not_survived,
+    e1_not_survived_by_class_sex,
+    e1_survived_and_not_by_class_sex,
+    e1_add_is_minor,
 )
 
 from src.io_utils import save_table, save_text
@@ -124,6 +128,18 @@ def run_ejercicio1(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
     survived_vs_not(df, dirs["figures"] / "e1_11_survived_vs_not.png")
     sections.append("- (11) Plot supervivencia (Sí/No): `outputs/figures/e1_11_survived_vs_not.png`")
 
+    # 12) total no sobrevivieron
+    save_table(e1_total_not_survived(df), dirs["tables"] / "e1_12_total_not_survived.csv")
+    sections.append("- (12) Total no sobrevivieron: `outputs/tables/e1_12_total_not_survived.csv`")
+
+    # 13) no sobrevivieron por clase y sexo
+    save_table(e1_not_survived_by_class_sex(df), dirs["tables"] / "e1_13_not_surv_by_class_sex.csv")
+    sections.append("- (13) No sobrevivieron por clase/sexo: `outputs/tables/e1_13_not_surv_by_class_sex.csv`")
+
+    # 14) sobrevivieron y no sobrevivieron por clase y sexo
+    save_table(e1_survived_and_not_by_class_sex(df), dirs["tables"] / "e1_14_surv_and_not_by_class_sex.csv")
+    sections.append("- (14) Sobrevivieron/No por clase/sexo: `outputs/tables/e1_14_surv_and_not_by_class_sex.csv`")
+
     # 16) distribución edad hist + densidad (tras eliminar nulos)
     age_hist_with_kde(df, dirs["figures"] / "e1_16_age_hist_kde.png")
     sections.append("- (16) Distribución edad (hist + densidad): `outputs/figures/e1_16_age_hist_kde.png`")
@@ -131,6 +147,16 @@ def run_ejercicio1(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
     # 17) hist alternativo
     age_hist_alt(df, dirs["figures"] / "e1_17_age_hist_alt.png")
     sections.append("- (17) Histograma edad (alt): `outputs/figures/e1_17_age_hist_alt.png`")
+
+    # 18) columna IsMinor16 (muestra conteo final como verificación)
+    df_minor = e1_add_is_minor(df)
+    minor_counts = (
+        df_minor.group_by("IsMinor16")
+        .agg(pl.len().alias("count"))
+        .sort("IsMinor16")
+    )
+    save_table(minor_counts, dirs["tables"] / "e1_18_minor16_counts.csv")
+    sections.append("- (18) Menores de 16 (columna IsMinor16) — recuento: `outputs/tables/e1_18_minor16_counts.csv`")
 
     return sections
 
@@ -157,15 +183,4 @@ def main() -> int:
 if __name__ == "__main__":
     raise SystemExit(main())
 
-
-
-
 #######################################################################################
-
-   
-
-    
-
-    
-
-   

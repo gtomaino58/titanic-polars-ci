@@ -69,3 +69,41 @@ def e1_counts_for_sex_plot(df: pl.DataFrame) -> pl.DataFrame:
 def e1_counts_for_sex_class_plot(df: pl.DataFrame) -> pl.DataFrame:
     # para plot #9 (sexo + clase)
     return e1_sex_by_class(df)
+
+import polars as pl
+
+
+def e1_total_not_survived(df: pl.DataFrame) -> pl.DataFrame:
+    # (12) número total de pasajeros que NO sobrevivieron
+    return df.filter(pl.col("Survived") == 0).select(pl.len().alias("not_survived_total"))
+
+
+def e1_not_survived_by_class_sex(df: pl.DataFrame) -> pl.DataFrame:
+    # (13) no sobrevivieron por clase y sexo
+    return (
+        df.filter(pl.col("Survived") == 0)
+        .group_by(["Pclass", "Sex"])
+        .agg(pl.len().alias("count"))
+        .sort(["Pclass", "Sex"])
+    )
+
+
+def e1_survived_and_not_by_class_sex(df: pl.DataFrame) -> pl.DataFrame:
+    # (14) sobrevivieron y no sobrevivieron agrupados por clase y sexo
+    # devuelve tabla con columnas: Pclass, Sex, Survived, count
+    return (
+        df.group_by(["Pclass", "Sex", "Survived"])
+        .agg(pl.len().alias("count"))
+        .sort(["Pclass", "Sex", "Survived"])
+    )
+
+
+def e1_add_is_minor(df: pl.DataFrame) -> pl.DataFrame:
+    # (18) función menores de 16 -> creamos columna booleana
+    # Nota: Age puede ser null
+    return df.with_columns(
+        pl.when(pl.col("Age").is_null())
+        .then(None)
+        .otherwise(pl.col("Age") < 16)
+        .alias("IsMinor16")
+    )
