@@ -8,8 +8,13 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: run-practica-main
+  cancel-in-progress: true
+
 jobs:
   run:
+    # Anti-loop: no ejecutar si el push lo hace github-actions
     if: ${{ github.actor != 'github-actions' }}
     runs-on: ubuntu-latest
 
@@ -33,25 +38,85 @@ jobs:
 
       - name: Publish outputs to docs (Pages) + CSV previews
         run: |
+          # Re-crear carpetas publicadas
           rm -rf docs/figures docs/tables
           mkdir -p docs/figures docs/tables
 
+          # Copiar outputs
           cp -r outputs/figures/* docs/figures/ || true
           cp -r outputs/tables/* docs/tables/ || true
 
+          # Copiar informes a docs
           cp INFORME_FINAL.md docs/INFORME_FINAL.md || true
           cp "Practica_Titanic_Informe_Final.txt" "docs/Practica_Titanic_Informe_Final.txt" || true
 
-          # Previews HTML para CSV
+          # ---------- Generar preview HTML para cada CSV ----------
           for f in docs/tables/*.csv; do
             [ -e "$f" ] || continue
             bn=$(basename "$f")
             name="${bn%.csv}"
             out="docs/tables/${name}.html"
-            CSV_PATH="$f" HTML_PATH="$out" python src/tools/csv_to_html.py
+            CSV_PATH="$f" HTML_PATH="$out" python - <<'PY'
+import csv, html, os
+
+csv_path = os.environ["CSV_PATH"]
+html_path = os.environ["HTML_PATH"]
+
+with open(csv_path, "r", encoding="utf-8", newline="") as fp:
+    reader = csv.reader(fp)
+    rows = list(reader)
+
+MAX_ROWS = 200
+MAX_COLS = 50
+rows = rows[:MAX_ROWS]
+rows = [r[:MAX_COLS] for r in rows]
+
+def td(cell, th=False):
+    tag = "th" if th else "td"
+    return f"<{tag}>" + html.escape(cell) + f"</{tag}>"
+
+table = ["<table>"]
+for i, r in enumerate(rows):
+    table.append("<tr>" + "".join(td(c, th=(i == 0)) for c in r) + "</tr>")
+table.append("</table>")
+table_html = "\n".join(table)
+
+title = os.path.basename(csv_path)
+
+page = f"""<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{html.escape(title)}</title>
+  <style>
+    body{{font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:1100px;margin:40px auto;padding:0 16px;line-height:1.5}}
+    a{{color:#0969da;text-decoration:none}} a:hover{{text-decoration:underline}}
+    table{{border-collapse:collapse;width:100%;font-size:14px}}
+    th,td{{border:1px solid #e5e7eb;padding:6px 8px;vertical-align:top}}
+    th{{background:#f6f8fa;position:sticky;top:0}}
+    .topbar{{display:flex;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap}}
+    .hint{{color:#555}}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <a href="./index.html">← Volver a Tablas</a>
+    <a href="./{html.escape(title)}" download>Descargar CSV</a>
+    <span class="hint">Vista previa (máx. {MAX_ROWS} filas)</span>
+  </div>
+  <h1>{html.escape(title)}</h1>
+  {table_html}
+</body>
+</html>
+"""
+
+with open(html_path, "w", encoding="utf-8") as out:
+    out.write(page)
+PY
           done
 
-          # Index de FIGURAS
+          # ---------- Index de FIGURAS (evita 404) ----------
           cat > docs/figures/index.html <<'EOF'
           <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
           <title>Figuras</title><style>body{font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:980px;margin:40px auto;padding:0 16px}li{margin:6px 0}a{color:#0969da;text-decoration:none}a:hover{text-decoration:underline}</style></head>
@@ -64,7 +129,7 @@ jobs:
           done
           echo "</ul></body></html>" >> docs/figures/index.html
 
-          # Index de TABLAS (enlaza a preview HTML)
+          # ---------- Index de TABLAS (evita 404 + enlaza a preview HTML) ----------
           cat > docs/tables/index.html <<'EOF'
           <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
           <title>Tablas</title><style>body{font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:980px;margin:40px auto;padding:0 16px}li{margin:6px 0}a{color:#0969da;text-decoration:none}a:hover{text-decoration:underline}.hint{color:#555;font-size:12px}</style></head>
@@ -91,7 +156,9 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+
           git add docs/figures docs/tables docs/INFORME_FINAL.md docs/Practica_Titanic_Informe_Final.txt docs/index.html
+
           git commit -m "Pages: update published outputs [skip ci]" || echo "No changes to commit"
           git push
 
@@ -103,3 +170,4 @@ jobs:
             outputs
             INFORME_FINAL.md
             Practica_Titanic_Informe_Final.txt
+
