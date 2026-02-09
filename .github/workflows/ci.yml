@@ -50,70 +50,13 @@ jobs:
           cp INFORME_FINAL.md docs/INFORME_FINAL.md || true
           cp "Practica_Titanic_Informe_Final.txt" "docs/Practica_Titanic_Informe_Final.txt" || true
 
-          # ---------- Generar preview HTML para cada CSV ----------
+          # ---------- Previews HTML para CSV (sin heredoc: usando script del repo) ----------
           for f in docs/tables/*.csv; do
             [ -e "$f" ] || continue
             bn=$(basename "$f")
             name="${bn%.csv}"
             out="docs/tables/${name}.html"
-            CSV_PATH="$f" HTML_PATH="$out" python - <<'PY'
-import csv, html, os
-
-csv_path = os.environ["CSV_PATH"]
-html_path = os.environ["HTML_PATH"]
-
-with open(csv_path, "r", encoding="utf-8", newline="") as fp:
-    reader = csv.reader(fp)
-    rows = list(reader)
-
-MAX_ROWS = 200
-MAX_COLS = 50
-rows = rows[:MAX_ROWS]
-rows = [r[:MAX_COLS] for r in rows]
-
-def td(cell, th=False):
-    tag = "th" if th else "td"
-    return f"<{tag}>" + html.escape(cell) + f"</{tag}>"
-
-table = ["<table>"]
-for i, r in enumerate(rows):
-    table.append("<tr>" + "".join(td(c, th=(i == 0)) for c in r) + "</tr>")
-table.append("</table>")
-table_html = "\n".join(table)
-
-title = os.path.basename(csv_path)
-
-page = f"""<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>{html.escape(title)}</title>
-  <style>
-    body{{font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:1100px;margin:40px auto;padding:0 16px;line-height:1.5}}
-    a{{color:#0969da;text-decoration:none}} a:hover{{text-decoration:underline}}
-    table{{border-collapse:collapse;width:100%;font-size:14px}}
-    th,td{{border:1px solid #e5e7eb;padding:6px 8px;vertical-align:top}}
-    th{{background:#f6f8fa;position:sticky;top:0}}
-    .topbar{{display:flex;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap}}
-    .hint{{color:#555}}
-  </style>
-</head>
-<body>
-  <div class="topbar">
-    <a href="./index.html">← Volver a Tablas</a>
-    <a href="./{html.escape(title)}" download>Descargar CSV</a>
-    <span class="hint">Vista previa (máx. {MAX_ROWS} filas)</span>
-  </div>
-  <h1>{html.escape(title)}</h1>
-  {table_html}
-</body>
-</html>
-"""
-
-with open(html_path, "w", encoding="utf-8") as out:
-    out.write(page)
-PY
+            CSV_PATH="$f" HTML_PATH="$out" python src/tools/csv_to_html.py
           done
 
           # ---------- Index de FIGURAS (evita 404) ----------
@@ -170,4 +113,3 @@ PY
             outputs
             INFORME_FINAL.md
             Practica_Titanic_Informe_Final.txt
-
