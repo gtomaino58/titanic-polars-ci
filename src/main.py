@@ -249,10 +249,11 @@ def main() -> int:
     sections = []
     sections.extend(run_ejercicio1(data_dir, dirs))
     sections.extend(run_ejercicio2(data_dir, dirs))
-
+    
     write_report_stub(base, dirs, sections)
 
-    print("OK: Ejercicio 1 (tablas) generado en outputs/tables y actualizado INFORME_FINAL.md")
+    print("OK: Pipeline Completo (Ej1 + Ej2) ejecutado; outputs(tables + figures) e INFORME_FINAL.md generados.")
+
     return 0
 
 
