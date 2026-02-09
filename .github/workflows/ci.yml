@@ -38,3 +38,11 @@ jobs:
             outputs
             INFORME_FINAL.md
             Practica Titanic Report Final.txt
+
+      - name: Publish outputs to docs (Pages)
+        run: |
+          rm -rf docs/figures docs/tables
+          mkdir -p docs/figures docs/tables
+          cp -r outputs/figures/* docs/figures/ || true
+          cp -r outputs/tables/* docs/tables/ || true
+

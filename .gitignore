@@ -213,6 +213,6 @@ report/*
 !report/.gitkeep
 
 # Datos locales (CSV). Si el profe permite subirlos, comenta estas líneas.
-data/*.csv
-data/*.tsv
-data/*.parquet
+# data/*.csv
+# data/*.tsv
+# data/*.parquet
