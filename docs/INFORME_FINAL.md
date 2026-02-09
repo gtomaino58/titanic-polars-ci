@@ -1,6 +1,6 @@
 # Práctica Titanic (Polars) — Informe
 
-Generado automáticamente: **2026-02-09 22:29:21**
+Generado automáticamente: **2026-02-09 22:39:34**
 
 ## Outputs
 - Figuras: `/home/runner/work/titanic-polars-ci/titanic-polars-ci/outputs/figures`
