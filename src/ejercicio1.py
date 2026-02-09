@@ -107,3 +107,7 @@ def e1_add_is_minor(df: pl.DataFrame) -> pl.DataFrame:
         .otherwise(pl.col("Age") < 16)
         .alias("IsMinor16")
     )
+
+def e1_dropna_age(df: pl.DataFrame) -> pl.DataFrame:
+    # (15) eliminar registros con edad nula
+    return df.filter(pl.col("Age").is_not_null())

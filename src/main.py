@@ -19,7 +19,9 @@ from src.ejercicio1 import (
     e1_not_survived_by_class_sex,
     e1_survived_and_not_by_class_sex,
     e1_add_is_minor,
+    e1_dropna_age,   # <-- AÑADE ESTA LÍNEA
 )
+
 
 from src.ejercicio2 import (
     load_pasajeros,
@@ -154,6 +156,20 @@ def run_ejercicio1(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
     save_table(e1_survived_and_not_by_class_sex(df), dirs["tables"] / "e1_14_surv_and_not_by_class_sex.csv")
     sections.append("- (14) Sobrevivieron/No por clase/sexo: `outputs/tables/e1_14_surv_and_not_by_class_sex.csv`")
 
+    # 15) eliminar registros con edad nula
+    df_age_clean = e1_dropna_age(df)
+    save_table(
+        pl.DataFrame({
+            "rows_before": [df.height],
+            "rows_after": [df_age_clean.height],
+        }),
+        dirs["tables"] / "e1_15_dropna_age_summary.csv",
+    )
+    sections.append(
+        "- (15) Eliminación de registros con Age nula — resumen: "
+        "`outputs/tables/e1_15_dropna_age_summary.csv`"
+    )
+    
     # 16) distribución edad hist + densidad (tras eliminar nulos)
     age_hist_with_kde(df, dirs["figures"] / "e1_16_age_hist_kde.png")
     sections.append("- (16) Distribución edad (hist + densidad): `outputs/figures/e1_16_age_hist_kde.png`")
