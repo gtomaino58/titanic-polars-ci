@@ -80,9 +80,7 @@ Se ha construido un DataFrame mediante un **inner join** por el campo `Passenger
 
 ## 5. Reproducibilidad
 
-La práctica es completamente reproducible.  
-Ejecutando el comando:
-
+La práctica es completamente reproducible ejecutando el comando:
 python -m src.main
 
 ## 6. Conclusiones
