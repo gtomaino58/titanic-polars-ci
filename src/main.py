@@ -80,22 +80,22 @@ def run_ejercicio1(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
     df = load_titanic(data_dir)
 
     # 1) head
-    save_table(e1_head(df), dirs["tables"] / "e1_head.csv")
+    save_table(e1_head(df), dirs["tables"] / "e1_01_head.csv")
     sections.append("## Ejercicio 1 — Titanic\n")
-    sections.append("- (1) Primeras 5 filas: `outputs/tables/e1_head.csv`")
+    sections.append("- (1) Primeras 5 filas: `outputs/tables/e1_01_head.csv`")
 
     # 2) columnas
     cols = e1_columns(df)
-    save_text(cols, dirs["tables"] / "e1_columns.txt")
+    save_text(cols, dirs["tables"] / "e1_02_columns.txt")
     sections.append("- (2) Columnas: `outputs/tables/e1_columns.txt`")
 
     # 3) info (schema + nulos)
-    save_table(e1_info(df), dirs["tables"] / "e1_info.csv")
-    sections.append("- (3) Info (dtype + nulos): `outputs/tables/e1_info.csv`")
+    save_table(e1_info(df), dirs["tables"] / "e1_03_info.csv")
+    sections.append("- (3) Info (dtype + nulos): `outputs/tables/e1_03_info.csv`")
 
     # 4) pasajeros por clase
-    save_table(e1_passengers_by_class(df), dirs["tables"] / "e1_by_class.csv")
-    sections.append("- (4) Nº pasajeros por clase: `outputs/tables/e1_by_class.csv`")
+    save_table(e1_passengers_by_class(df), dirs["tables"] / "e1_04_by_class.csv")
+    sections.append("- (4) Nº pasajeros por clase: `outputs/tables/e1_04_by_class.csv`")
 
      # 5) plot pasajeros por clase
     bar_counts(
@@ -109,7 +109,7 @@ def run_ejercicio1(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
 
     # 6) por sexo
     save_table(e1_passengers_by_sex(df), dirs["tables"] / "e1_by_sex.csv")
-    sections.append("- (6) Nº pasajeros por sexo: `outputs/tables/e1_by_sex.csv`")
+    sections.append("- (6) Nº pasajeros por sexo: `outputs/tables/e1_06_by_sex.csv`")
 
     # 7) plot hombres vs mujeres
     bar_counts(
@@ -122,7 +122,7 @@ def run_ejercicio1(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
     sections.append("- (7) Plot pasajeros por sexo: `outputs/figures/e1_07_passengers_by_sex.png`")
 
     # 8) sexo por clase
-    save_table(e1_sex_by_class(df), dirs["tables"] / "e1_sex_by_class.csv")
+    save_table(e1_sex_by_class(df), dirs["tables"] / "e1_08_sex_by_class.csv")
     sections.append("- (8) Nº hombres/mujeres por clase: `outputs/tables/e1_sex_by_class.csv`")
 
     # 9) plot sexo por clase (barras agrupadas)
@@ -137,8 +137,8 @@ def run_ejercicio1(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
     sections.append("- (9) Plot por sexo y clase: `outputs/figures/e1_09_sex_by_class.png`")
 
     # 10) sobrevivientes por clase/sexo (con Survived)
-    save_table(e1_survived_by_class_sex(df), dirs["tables"] / "e1_surv_by_class_sex.csv")
-    sections.append("- (10) Supervivencia por clase/sexo: `outputs/tables/e1_surv_by_class_sex.csv`")
+    save_table(e1_survived_by_class_sex(df), dirs["tables"] / "e1_10_surv_by_class_sex.csv")
+    sections.append("- (10) Supervivencia por clase/sexo: `outputs/tables/e1_10_surv_by_class_sex.csv`")
 
      # 11) plot sobrevivieron vs no
     survived_vs_not(df, dirs["figures"] / "e1_11_survived_vs_not.png")
