@@ -44,26 +44,9 @@ jobs:
           rm -rf site
           mkdir -p site/figures site/tables
 
-          # Landing: usa docs/index.html si existe, si no crea una básica
-          if [ -f docs/index.html ]; then
-            cp docs/index.html site/index.html
-          else
-            cat > site/index.html <<'EOF'
-<!doctype html>
-<html lang="es">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Práctica Titanic</title></head>
-<body>
-<h1>Práctica Titanic</h1>
-<ul>
-  <li><a href="./Practica_Titanic_Informe_Final.txt">Informe de entrega</a></li>
-  <li><a href="./INFORME_FINAL.md">Informe automático</a></li>
-  <li><a href="./figures/">Figuras</a></li>
-  <li><a href="./tables/">Tablas</a></li>
-</ul>
-</body></html>
-EOF
-          fi
+          # Landing: requiere docs/index.html en el repo
+          test -f docs/index.html
+          cp docs/index.html site/index.html
 
           # Copiar outputs
           cp -r outputs/figures/* site/figures/ || true
@@ -73,7 +56,7 @@ EOF
           cp INFORME_FINAL.md site/INFORME_FINAL.md || true
           cp "Practica_Titanic_Informe_Final.txt" "site/Practica_Titanic_Informe_Final.txt" || true
 
-          # Previews HTML para CSV usando tu script (sin heredocs)
+          # Previews HTML para CSV usando tu script
           for f in site/tables/*.csv; do
             [ -e "$f" ] || continue
             bn=$(basename "$f")
@@ -82,7 +65,7 @@ EOF
             CSV_PATH="$f" HTML_PATH="$out" python src/tools/csv_to_html.py
           done
 
-          # Index de FIGURAS (HTML muy simple, generado por Python one-liner)
+          # Index de FIGURAS
           python - <<'PY'
 import os, html, glob
 os.makedirs("site/figures", exist_ok=True)
@@ -94,7 +77,7 @@ page = f"""<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name
 open("site/figures/index.html","w",encoding="utf-8").write(page)
 PY
 
-          # Index de TABLAS: enlaza a preview HTML si es CSV (también Python one-liner)
+          # Index de TABLAS
           python - <<'PY'
 import os, html, glob
 os.makedirs("site/tables", exist_ok=True)
