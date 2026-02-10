@@ -1,6 +1,6 @@
 # Práctica Titanic (Polars) — Informe automático
 
-Generado automáticamente: **2026-02-10 19:29:46**
+Generado automáticamente: **2026-02-10 20:23:25**
 
 ## Outputs
 - Figuras: `C:/Users/gtoma/Downloads/Comp_Mod_Distr/titanic-polars-ci/outputs/figures`
