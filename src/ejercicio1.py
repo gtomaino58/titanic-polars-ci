@@ -135,30 +135,31 @@ def e1_survived_not_pivot_by_class_sex(df: pl.DataFrame) -> pl.DataFrame:
         df.group_by(["Pclass", "Sex", "Survived"])
         .agg(pl.len().alias("count"))
         .sort(["Pclass", "Sex", "Survived"])
+        .with_columns(pl.col("Survived").cast(pl.Utf8))  # <-- clave: columnas del pivot como strings "0"/"1"
     )
 
     pivot = (
         base.pivot(
             index=["Pclass", "Sex"],
-            columns="Survived",
+            columns="Survived",   # ahora serán "0" y "1"
             values="count",
             aggregate_function="first",
         )
         .sort(["Pclass", "Sex"])
     )
 
-    # Normalizar columnas 0 y 1
-    if 0 not in pivot.columns:
-        pivot = pivot.with_columns(pl.lit(0).alias(0))
-    if 1 not in pivot.columns:
-        pivot = pivot.with_columns(pl.lit(0).alias(1))
+    # asegurar columnas "0" y "1"
+    if "0" not in pivot.columns:
+        pivot = pivot.with_columns(pl.lit(0).alias("0"))
+    if "1" not in pivot.columns:
+        pivot = pivot.with_columns(pl.lit(0).alias("1"))
 
     pivot = pivot.with_columns(
-        (pl.col(0).fill_null(0) + pl.col(1).fill_null(0)).alias("Total")
+        (pl.col("0").fill_null(0) + pl.col("1").fill_null(0)).alias("Total")
     )
 
     return (
-        pivot.rename({0: "NotSurvived_0", 1: "Survived_1"})
+        pivot.rename({"0": "NotSurvived_0", "1": "Survived_1"})
         .select(["Pclass", "Sex", "NotSurvived_0", "Survived_1", "Total"])
     )
 
