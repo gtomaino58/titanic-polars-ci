@@ -216,3 +216,7 @@ report/*
 # data/*.csv
 # data/*.tsv
 # data/*.parquet
+
+# Pages: outputs generados (ya no se versionan)
+docs/figures/
+docs/tables/
