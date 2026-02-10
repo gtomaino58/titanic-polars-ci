@@ -55,6 +55,11 @@ Las visualizaciones se han generado sin utilizar seaborn ni pandas, empleando ex
 - (16) Distribución de edad (histograma + densidad): `outputs/figures/e1_16_age_hist_kde.png`
 - (17) Histograma alternativo de edades: `outputs/figures/e1_17_age_hist_alt.png`
 
+Nota: el gráfico e1_16 permite analizar la forma de la distribución de la edad mediante una estimación
+continua de densidad (Histograma normalizado + KDE mas adecuado para análisis estadístico: ¿Cómo se
+distribuye?), mientras que e1_17 muestra el número real de pasajeros por intervalos de edad (Histograma
+clásico mas adecuado para conteo descriptivo: ¿Cuántos hay?).
+
 ### 3.3 Limpieza y transformaciones
 
 - (15) Eliminación de registros con edad nula.  
