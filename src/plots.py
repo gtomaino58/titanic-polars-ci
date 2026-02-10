@@ -6,6 +6,14 @@ import polars as pl
 import matplotlib.pyplot as plt
 
 
+def annotate_bars(ax, fmt: str = "{:.0f}", padding: int = 3) -> None:
+    """
+    Escribe el valor encima de cada barra (para gráficos de barras).
+    """
+    for container in ax.containers:
+        ax.bar_label(container, fmt=fmt, padding=padding)
+
+
 def _save(figpath: Path) -> None:
     figpath.parent.mkdir(parents=True, exist_ok=True)
     plt.tight_layout()
@@ -17,11 +25,14 @@ def bar_counts(df_counts: pl.DataFrame, x_col: str, y_col: str, title: str, figp
     x = df_counts[x_col].to_list()
     y = df_counts[y_col].to_list()
 
-    plt.figure()
-    plt.bar(x, y)
-    plt.title(title)
-    plt.xlabel(x_col)
-    plt.ylabel(y_col)
+    fig, ax = plt.subplots()
+    ax.bar(x, y)
+    ax.set_title(title)
+    ax.set_xlabel(x_col)
+    ax.set_ylabel(y_col)
+
+    annotate_bars(ax, fmt="{:.0f}", padding=3)
+
     _save(figpath)
 
 
@@ -33,39 +44,43 @@ def bar_counts_hue(
     title: str,
     figpath: Path,
 ) -> None:
-    # barras agrupadas (x = clase, hue = sexo, etc.)
     xs = df_counts[x_col].unique().to_list()
     hues = df_counts[hue_col].unique().to_list()
 
-    # ordenar para que quede bonito
     try:
         xs = sorted(xs)
     except Exception:
         xs = sorted(xs, key=str)
     hues = sorted(hues, key=str)
 
-    # pivot a matriz (filas xs, columnas hues)
     pivot = (
         df_counts.pivot(index=x_col, columns=hue_col, values=y_col, aggregate_function="first")
         .sort(x_col)
     )
+
     x_vals = pivot[x_col].to_list()
     width = 0.8 / max(1, len(hues))
     base = np.arange(len(x_vals))
 
-    plt.figure()
+    fig, ax = plt.subplots()
+
     for i, h in enumerate(hues):
         if h in pivot.columns:
             y = pivot[h].fill_null(0).to_numpy()
         else:
             y = np.zeros(len(x_vals))
-        plt.bar(base + i * width, y, width=width, label=str(h))
+        ax.bar(base + i * width, y, width=width, label=str(h))
 
-    plt.xticks(base + width * (len(hues) - 1) / 2, [str(v) for v in x_vals])
-    plt.title(title)
-    plt.xlabel(x_col)
-    plt.ylabel(y_col)
-    plt.legend(title=hue_col)
+    ax.set_xticks(base + width * (len(hues) - 1) / 2)
+    ax.set_xticklabels([str(v) for v in x_vals])
+
+    ax.set_title(title)
+    ax.set_xlabel(x_col)
+    ax.set_ylabel(y_col)
+    ax.legend(title=hue_col)
+
+    annotate_bars(ax, fmt="{:.0f}", padding=3)
+
     _save(figpath)
 
 
@@ -74,11 +89,14 @@ def survived_vs_not(df: pl.DataFrame, figpath: Path) -> None:
     x = [("No" if v == 0 else "Sí") for v in counts["Survived"].to_list()]
     y = counts["count"].to_list()
 
-    plt.figure()
-    plt.bar(x, y)
-    plt.title("Supervivieron vs No sobrevivieron")
-    plt.xlabel("Survived")
-    plt.ylabel("count")
+    fig, ax = plt.subplots()
+    ax.bar(x, y)
+    ax.set_title("¿ Sobrevivieron ?")
+    ax.set_xlabel("Survived")
+    ax.set_ylabel("count")
+
+    annotate_bars(ax, fmt="{:.0f}", padding=3)
+
     _save(figpath)
 
 
