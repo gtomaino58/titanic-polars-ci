@@ -14,14 +14,13 @@ from src.ejercicio1 import (
     e1_passengers_by_class,
     e1_passengers_by_sex,
     e1_sex_by_class,
-    e1_survived_by_class_sex,
-    e1_total_not_survived,
-    e1_not_survived_by_class_sex,
-    e1_survived_and_not_by_class_sex,
-    e1_add_is_minor,
-    e1_dropna_age,   # <-- AÑADE ESTA LÍNEA
+    e1_survived_pivot_by_class_sex,        # (10) solo supervivientes pivot
+    e1_total_not_survived,                 # (12)
+    e1_not_survived_by_class_sex,          # (13)
+    e1_survived_not_pivot_by_class_sex,    # (14) surv/no pivot
+    e1_add_is_minor,                       # (18)
+    e1_dropna_age,                         # (15)
 )
-
 
 from src.ejercicio2 import (
     load_pasajeros,
@@ -62,7 +61,7 @@ def write_report_stub(base: Path, dirs: dict[str, Path], sections: list[str]) ->
     md_path = base / "INFORME_FINAL.md"
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     body = "\n".join(sections)
-    md = f"""# Práctica Titanic (Polars) — Informe
+    md = f"""# Práctica Titanic (Polars) — Informe automático
 
 Generado automáticamente: **{now}**
 
@@ -77,19 +76,20 @@ Generado automáticamente: **{now}**
 
 def run_ejercicio1(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
     sections: list[str] = []
+    sections.append("## Ejercicio 1 — Titanic\n")
+
     df = load_titanic(data_dir)
 
     # 1) head
     save_table(e1_head(df), dirs["tables"] / "e1_01_head.csv")
-    sections.append("## Ejercicio 1 — Titanic\n")
     sections.append("- (1) Primeras 5 filas: `outputs/tables/e1_01_head.csv`")
 
     # 2) columnas
     cols = e1_columns(df)
     save_text(cols, dirs["tables"] / "e1_02_columns.txt")
-    sections.append("- (2) Columnas: `outputs/tables/e1_columns.txt`")
+    sections.append("- (2) Columnas: `outputs/tables/e1_02_columns.txt`")
 
-    # 3) info (schema + nulos)
+    # 3) info (dtype + nulos)
     save_table(e1_info(df), dirs["tables"] / "e1_03_info.csv")
     sections.append("- (3) Info (dtype + nulos): `outputs/tables/e1_03_info.csv`")
 
@@ -97,7 +97,7 @@ def run_ejercicio1(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
     save_table(e1_passengers_by_class(df), dirs["tables"] / "e1_04_by_class.csv")
     sections.append("- (4) Nº pasajeros por clase: `outputs/tables/e1_04_by_class.csv`")
 
-     # 5) plot pasajeros por clase
+    # 5) plot pasajeros por clase
     bar_counts(
         e1_passengers_by_class(df),
         x_col="Pclass",
@@ -108,7 +108,7 @@ def run_ejercicio1(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
     sections.append("- (5) Plot pasajeros por clase: `outputs/figures/e1_05_passengers_by_class.png`")
 
     # 6) por sexo
-    save_table(e1_passengers_by_sex(df), dirs["tables"] / "e1_by_sex.csv")
+    save_table(e1_passengers_by_sex(df), dirs["tables"] / "e1_06_by_sex.csv")
     sections.append("- (6) Nº pasajeros por sexo: `outputs/tables/e1_06_by_sex.csv`")
 
     # 7) plot hombres vs mujeres
@@ -123,7 +123,7 @@ def run_ejercicio1(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
 
     # 8) sexo por clase
     save_table(e1_sex_by_class(df), dirs["tables"] / "e1_08_sex_by_class.csv")
-    sections.append("- (8) Nº hombres/mujeres por clase: `outputs/tables/e1_sex_by_class.csv`")
+    sections.append("- (8) Nº hombres/mujeres por clase: `outputs/tables/e1_08_sex_by_class.csv`")
 
     # 9) plot sexo por clase (barras agrupadas)
     bar_counts_hue(
@@ -136,11 +136,11 @@ def run_ejercicio1(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
     )
     sections.append("- (9) Plot por sexo y clase: `outputs/figures/e1_09_sex_by_class.png`")
 
-    # 10) sobrevivientes por clase/sexo (con Survived)
-    save_table(e1_survived_by_class_sex(df), dirs["tables"] / "e1_10_surv_by_class_sex.csv")
-    sections.append("- (10) Supervivencia por clase/sexo: `outputs/tables/e1_10_surv_by_class_sex.csv`")
+    # 10) SOLO supervivientes por clase/sexo + total por clase (PIVOT)
+    save_table(e1_survived_pivot_by_class_sex(df), dirs["tables"] / "e1_10_survived_by_class_sex_pivot.csv")
+    sections.append("- (10) Supervivientes por clase/sexo (pivot + total): `outputs/tables/e1_10_survived_by_class_sex_pivot.csv`")
 
-     # 11) plot sobrevivieron vs no
+    # 11) plot sobrevivieron vs no
     survived_vs_not(df, dirs["figures"] / "e1_11_survived_vs_not.png")
     sections.append("- (11) Plot supervivencia (Sí/No): `outputs/figures/e1_11_survived_vs_not.png`")
 
@@ -152,33 +152,27 @@ def run_ejercicio1(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
     save_table(e1_not_survived_by_class_sex(df), dirs["tables"] / "e1_13_not_surv_by_class_sex.csv")
     sections.append("- (13) No sobrevivieron por clase/sexo: `outputs/tables/e1_13_not_surv_by_class_sex.csv`")
 
-    # 14) sobrevivieron y no sobrevivieron por clase y sexo
-    save_table(e1_survived_and_not_by_class_sex(df), dirs["tables"] / "e1_14_surv_and_not_by_class_sex.csv")
-    sections.append("- (14) Sobrevivieron/No por clase/sexo: `outputs/tables/e1_14_surv_and_not_by_class_sex.csv`")
+    # 14) sobrevivieron y no por clase y sexo (PIVOT)
+    save_table(e1_survived_not_pivot_by_class_sex(df), dirs["tables"] / "e1_14_survived_not_by_class_sex_pivot.csv")
+    sections.append("- (14) Supervivieron y no por clase/sexo (pivot): `outputs/tables/e1_14_survived_not_by_class_sex_pivot.csv`")
 
-    # 15) eliminar registros con edad nula
+    # 15) eliminar registros con edad nula + resumen
     df_age_clean = e1_dropna_age(df)
     save_table(
-        pl.DataFrame({
-            "rows_before": [df.height],
-            "rows_after": [df_age_clean.height],
-        }),
+        pl.DataFrame({"rows_before": [df.height], "rows_after": [df_age_clean.height]}),
         dirs["tables"] / "e1_15_dropna_age_summary.csv",
     )
-    sections.append(
-        "- (15) Eliminación de registros con Age nula — resumen: "
-        "`outputs/tables/e1_15_dropna_age_summary.csv`"
-    )
-    
-    # 16) distribución edad hist + densidad (tras eliminar nulos)
-    age_hist_with_kde(df, dirs["figures"] / "e1_16_age_hist_kde.png")
+    sections.append("- (15) Eliminación Age nula (resumen): `outputs/tables/e1_15_dropna_age_summary.csv`")
+
+    # 16) distribución edad hist + densidad (usando df_age_clean)
+    age_hist_with_kde(df_age_clean, dirs["figures"] / "e1_16_age_hist_kde.png")
     sections.append("- (16) Distribución edad (hist + densidad): `outputs/figures/e1_16_age_hist_kde.png`")
 
-    # 17) hist alternativo
-    age_hist_alt(df, dirs["figures"] / "e1_17_age_hist_alt.png")
+    # 17) hist alternativo (usando df_age_clean)
+    age_hist_alt(df_age_clean, dirs["figures"] / "e1_17_age_hist_alt.png")
     sections.append("- (17) Histograma edad (alt): `outputs/figures/e1_17_age_hist_alt.png`")
 
-    # 18) columna IsMinor16 (muestra conteo final como verificación)
+    # 18) columna IsMinor16 (recuento)
     df_minor = e1_add_is_minor(df)
     minor_counts = (
         df_minor.group_by("IsMinor16")
@@ -186,9 +180,10 @@ def run_ejercicio1(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
         .sort("IsMinor16")
     )
     save_table(minor_counts, dirs["tables"] / "e1_18_minor16_counts.csv")
-    sections.append("- (18) Menores de 16 (columna IsMinor16) — recuento: `outputs/tables/e1_18_minor16_counts.csv`")
+    sections.append("- (18) Menores de 16 (recuento): `outputs/tables/e1_18_minor16_counts.csv`")
 
     return sections
+
 
 def run_ejercicio2(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
     sections: list[str] = []
@@ -200,12 +195,11 @@ def run_ejercicio2(data_dir: Path, dirs: dict[str, Path]) -> list[str]:
     df_joined = build_df(data_dir)
     df = add_puerto(df_joined)
 
-    # Diagnóstico join (muy importante porque tus tamaños no coinciden)
-    save_table(join_quality(df_p, df_s, df_joined), dirs["tables"] / "e2_join_quality.csv")
-    sections.append("- Join quality: `outputs/tables/e2_join_quality.csv`")
+    # Diagnóstico join
+    save_table(join_quality(df_p, df_s, df_joined), dirs["tables"] / "e2_00_join_quality.csv")
+    sections.append("- Join quality: `outputs/tables/e2_00_join_quality.csv`")
 
     # (1) puerto
-    # (guardamos un ejemplo de columnas para ver que existe)
     save_table(df.select(["PassengerId", "Embarked", "puerto"]).head(20), dirs["tables"] / "e2_01_puerto_sample.csv")
     sections.append("- (1) Columna puerto (sample): `outputs/tables/e2_01_puerto_sample.csv`")
 
@@ -246,18 +240,15 @@ def main() -> int:
 
     dirs = ensure_dirs(base)
 
-    sections = []
+    sections: list[str] = []
     sections.extend(run_ejercicio1(data_dir, dirs))
     sections.extend(run_ejercicio2(data_dir, dirs))
-    
+
     write_report_stub(base, dirs, sections)
 
     print("OK: Pipeline Completo (Ej1 + Ej2) ejecutado; outputs(tables + figures) e INFORME_FINAL.md generados.")
-
     return 0
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
-#######################################################################################
