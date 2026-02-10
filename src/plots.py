@@ -93,7 +93,7 @@ def survived_vs_not(df: pl.DataFrame, figpath: Path) -> None:
     ax.bar(x, y)
     ax.set_title("¿ Sobrevivieron ?")
     ax.set_xlabel("Survived")
-    ax.set_ylabel("count")
+    ax.set_ylabel("Recuento")
 
     annotate_bars(ax, fmt="{:.0f}", padding=3)
 
