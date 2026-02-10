@@ -37,25 +37,32 @@ jobs:
           python -m src.main
 
       - name: Build site folder (Pages)
+        shell: bash
         run: |
+          set -euo pipefail
+
           rm -rf site
           mkdir -p site/figures site/tables
 
-          # Landing: usa tu landing actual si existe en docs/index.html
+          # Landing: usa docs/index.html si existe, si no crea una básica
           if [ -f docs/index.html ]; then
             cp docs/index.html site/index.html
           else
-            # fallback minimal si no existe
             cat > site/index.html <<'EOF'
-            <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-            <title>Práctica Titanic</title></head><body><h1>Práctica Titanic</h1>
-            <ul>
-              <li><a href="./Practica_Titanic_Informe_Final.txt">Informe de entrega</a></li>
-              <li><a href="./INFORME_FINAL.md">Informe automático</a></li>
-              <li><a href="./figures/">Figuras</a></li>
-              <li><a href="./tables/">Tablas</a></li>
-            </ul></body></html>
-            EOF
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Práctica Titanic</title></head>
+<body>
+<h1>Práctica Titanic</h1>
+<ul>
+  <li><a href="./Practica_Titanic_Informe_Final.txt">Informe de entrega</a></li>
+  <li><a href="./INFORME_FINAL.md">Informe automático</a></li>
+  <li><a href="./figures/">Figuras</a></li>
+  <li><a href="./tables/">Tablas</a></li>
+</ul>
+</body></html>
+EOF
           fi
 
           # Copiar outputs
@@ -66,7 +73,7 @@ jobs:
           cp INFORME_FINAL.md site/INFORME_FINAL.md || true
           cp "Practica_Titanic_Informe_Final.txt" "site/Practica_Titanic_Informe_Final.txt" || true
 
-          # Previews HTML para CSV (usa tu script)
+          # Previews HTML para CSV usando tu script (sin heredocs)
           for f in site/tables/*.csv; do
             [ -e "$f" ] || continue
             bn=$(basename "$f")
@@ -75,41 +82,40 @@ jobs:
             CSV_PATH="$f" HTML_PATH="$out" python src/tools/csv_to_html.py
           done
 
-          # Index de FIGURAS (evita 404)
-          cat > site/figures/index.html <<'EOF'
-          <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-          <title>Figuras</title><style>body{font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:980px;margin:40px auto;padding:0 16px}li{margin:6px 0}a{color:#0969da;text-decoration:none}a:hover{text-decoration:underline}</style></head>
-          <body><h1>Figuras (PNG)</h1><p><a href="../index.html">← Volver</a></p><ul>
-          EOF
-          for f in site/figures/*.png; do
-            [ -e "$f" ] || continue
-            bn=$(basename "$f")
-            echo "<li><a href=\"./$bn\">$bn</a></li>" >> site/figures/index.html
-          done
-          echo "</ul></body></html>" >> site/figures/index.html
+          # Index de FIGURAS (HTML muy simple, generado por Python one-liner)
+          python - <<'PY'
+import os, html, glob
+os.makedirs("site/figures", exist_ok=True)
+files = sorted(glob.glob("site/figures/*.png"))
+items = "\n".join([f'<li><a href="./{html.escape(os.path.basename(p))}">{html.escape(os.path.basename(p))}</a></li>' for p in files])
+page = f"""<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Figuras</title><style>body{{font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:980px;margin:40px auto;padding:0 16px}}li{{margin:6px 0}}a{{color:#0969da;text-decoration:none}}a:hover{{text-decoration:underline}}</style></head>
+<body><h1>Figuras (PNG)</h1><p><a href="../index.html">← Volver</a></p><ul>{items}</ul></body></html>"""
+open("site/figures/index.html","w",encoding="utf-8").write(page)
+PY
 
-          # Index de TABLAS (evita 404 + enlaza a preview HTML)
-          cat > site/tables/index.html <<'EOF'
-          <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-          <title>Tablas</title><style>body{font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:980px;margin:40px auto;padding:0 16px}li{margin:6px 0}a{color:#0969da;text-decoration:none}a:hover{text-decoration:underline}.hint{color:#555;font-size:12px}</style></head>
-          <body><h1>Tablas (CSV/TXT)</h1><p><a href="../index.html">← Volver</a></p><p class="hint">Los CSV se abren en vista previa HTML; puedes descargarlos desde cada página.</p><ul>
-          EOF
-          for f in site/tables/*; do
-            [ -e "$f" ] || continue
-            bn=$(basename "$f")
-            if [[ "$bn" == "index.html" ]]; then
-              continue
-            fi
-            if [[ "$bn" == *.csv ]]; then
-              htmlname="${bn%.csv}.html"
-              echo "<li><a href=\"./$htmlname\">$bn</a> <span class=\"hint\">(vista)</span></li>" >> site/tables/index.html
-            elif [[ "$bn" == *.html ]]; then
-              continue
-            else
-              echo "<li><a href=\"./$bn\">$bn</a></li>" >> site/tables/index.html
-            fi
-          done
-          echo "</ul></body></html>" >> site/tables/index.html
+          # Index de TABLAS: enlaza a preview HTML si es CSV (también Python one-liner)
+          python - <<'PY'
+import os, html, glob
+os.makedirs("site/tables", exist_ok=True)
+files = sorted([p for p in glob.glob("site/tables/*") if not p.endswith("index.html")])
+items = []
+for p in files:
+    bn = os.path.basename(p)
+    if bn.endswith(".html"):
+        continue
+    if bn.endswith(".csv"):
+        view = bn[:-4] + ".html"
+        items.append(f'<li><a href="./{html.escape(view)}">{html.escape(bn)}</a> <span style="color:#555;font-size:12px">(vista)</span></li>')
+    else:
+        items.append(f'<li><a href="./{html.escape(bn)}">{html.escape(bn)}</a></li>')
+page = """<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tablas</title><style>body{font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:980px;margin:40px auto;padding:0 16px}li{margin:6px 0}a{color:#0969da;text-decoration:none}a:hover{text-decoration:underline}.hint{color:#555;font-size:12px}</style></head>
+<body><h1>Tablas (CSV/TXT)</h1><p><a href="../index.html">← Volver</a></p>
+<p class="hint">Los CSV se abren en vista previa HTML; puedes descargarlos desde cada página.</p>
+<ul>""" + "\n".join(items) + "</ul></body></html>"
+open("site/tables/index.html","w",encoding="utf-8").write(page)
+PY
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
