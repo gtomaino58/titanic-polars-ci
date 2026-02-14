@@ -87,6 +87,21 @@ Genera los resultados.
 Construye el sitio en site/.
 Publica automáticamente en GitHub Pages.
 
-Sitio web:
+** Sitio web:
 https://gtomaino58.github.io/titanic-polars-ci/
+
+ ** Restricciones cumplidas
+
+No se utiliza pandas
+No se utiliza Jupyter Notebook
+Programa Python ejecutable
+Resultados reproducibles
+Entrega en formato .py + .txt / .md
+
+** Nota final
+
+El proyecto sigue el principio de separación:
+Repositorio → código fuente e informes.
+GitHub Pages → resultados generados.
+CI → ejecución automática y despliegue.
 
