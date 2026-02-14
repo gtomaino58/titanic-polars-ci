@@ -4,16 +4,16 @@ Análisis del dataset Titanic utilizando **Python puro (sin pandas)** y la libre
 
 El proyecto genera automáticamente:
 
-- 📊 Tablas en formato CSV  
-- 📈 Gráficos en formato PNG  
-- 📝 Informe automático (`INFORME_FINAL.md`)  
-- 📄 Informe narrativo final (`Practica_Titanic_Informe_Final.txt`)  
+- Tablas en formato CSV  
+- Gráficos en formato PNG  
+- Informe automático (`INFORME_FINAL.md`)  
+- Informe narrativo final (`Practica_Titanic_Informe_Final.txt`)  
 
 Además, dispone de integración continua (GitHub Actions) y despliegue automático en GitHub Pages.
 
 ---
 
-## 🚀 Cómo ejecutar el proyecto
+## Cómo ejecutar el proyecto
 
 Desde la raíz del repositorio:
 
