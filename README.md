@@ -26,7 +26,7 @@ outputs/
     figures/
 INFORME_FINAL.md
 
-## Tecnologías utilizadas
+** Tecnologías utilizadas
 
 Python 3.11
 Polars (en lugar de pandas)
