@@ -4,28 +4,28 @@ Análisis del dataset Titanic utilizando **Python puro (sin pandas)** y la libre
 
 El proyecto genera automáticamente:
 
-- Tablas en formato CSV  
-- Gráficos en formato PNG  
-- Informe automático (`INFORME_FINAL.md`)  
-- Informe narrativo final (`Practica_Titanic_Informe_Final.txt`)  
+* Tablas en formato CSV  
+* Gráficos en formato PNG  
+* Informe automático (`INFORME_FINAL.md`)  
+* Informe narrativo final (`Practica_Titanic_Informe_Final.txt`)  
 
 Además, dispone de integración continua (GitHub Actions) y despliegue automático en GitHub Pages.
 
 ## Tecnologías utilizadas
 
-Python 3.11
-Polars (en lugar de pandas)
-Matplotlib
-SciPy (para estimación de densidad KDE)
-GitHub Actions (CI)
-GitHub Pages (publicación automática)
+* Python 3.11
+* Polars (en lugar de pandas)
+* Matplotlib
+* SciPy (para estimación de densidad KDE)
+* GitHub Actions (CI)
+* GitHub Pages (publicación automática)
 
 ## Estructura del proyecto
 
-src/main.py, ejercicio1.py, ejercicio2.py, plots.py, io_utils.py
-tools/csv_to_html.py, make_figures_index.py, make_tables_index.py
-data/titanic.csv, pasajeros.csv, supervivientes.csv
-github/workflows/ci.yml
+* src/main.py, ejercicio1.py, ejercicio2.py, plots.py, io_utils.py
+* tools/csv_to_html.py, make_figures_index.py, make_tables_index.py
+* data/titanic.csv, pasajeros.csv, supervivientes.csv
+* github/workflows/ci.yml
 
 ## Ejercicio 1 – Titanic clásico
 
