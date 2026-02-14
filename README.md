@@ -35,7 +35,7 @@ SciPy (para estimación de densidad KDE)
 GitHub Actions (CI)
 GitHub Pages (publicación automática)
 
-## Estructura del proyecto
+** Estructura del proyecto
 
 src/
     main.py
@@ -56,7 +56,7 @@ data/
 .github/workflows/
     ci.yml
 
-## Ejercicio 1 – Titanic clásico
+** Ejercicio 1 – Titanic clásico
 
 Incluye:
 
@@ -69,7 +69,7 @@ Histograma alternativo
 Tratamiento de valores nulos en edad
 Identificación de menores de 16 años
 
-## Ejercicio 2 – Join y análisis adicional
+** Ejercicio 2 – Join y análisis adicional
 
 Unión (inner join) de pasajeros y supervivientes
 Diagnóstico de calidad del join
@@ -78,7 +78,7 @@ Edad media por sexo y supervivencia
 Muertes por rango de edad
 Muertes por clase y género
 
-## Publicación automática
+** Publicación automática
 
 Cada git push:
 
