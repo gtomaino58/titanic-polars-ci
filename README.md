@@ -11,22 +11,7 @@ El proyecto genera automáticamente:
 
 Además, dispone de integración continua (GitHub Actions) y despliegue automático en GitHub Pages.
 
-## Cómo ejecutar el proyecto
-
-Desde la raíz del repositorio:
-
-```bash
-pip install -r requirements.txt
-python -m src.main
-
-Esto genera:
-
-outputs/
-    tables/
-    figures/
-INFORME_FINAL.md
-
-** Tecnologías utilizadas
+## Tecnologías utilizadas
 
 Python 3.11
 Polars (en lugar de pandas)
@@ -35,7 +20,7 @@ SciPy (para estimación de densidad KDE)
 GitHub Actions (CI)
 GitHub Pages (publicación automática)
 
-** Estructura del proyecto
+## Estructura del proyecto
 
 src/
     main.py
@@ -56,7 +41,7 @@ data/
 .github/workflows/
     ci.yml
 
-** Ejercicio 1 – Titanic clásico
+## Ejercicio 1 – Titanic clásico
 
 Incluye:
 
@@ -69,7 +54,7 @@ Histograma alternativo
 Tratamiento de valores nulos en edad
 Identificación de menores de 16 años
 
-** Ejercicio 2 – Join y análisis adicional
+## Ejercicio 2 – Join y análisis adicional
 
 Unión (inner join) de pasajeros y supervivientes
 Diagnóstico de calidad del join
@@ -78,7 +63,35 @@ Edad media por sexo y supervivencia
 Muertes por rango de edad
 Muertes por clase y género
 
-** Publicación automática
+## Restricciones cumplidas
+
+No se utiliza pandas
+No se utiliza Jupyter Notebook
+Programa Python ejecutable
+Resultados reproducibles
+Entrega en formato .py + .txt / .md
+
+## Nota final
+
+El proyecto sigue el principio de separación:
+Repositorio → código fuente e informes.
+GitHub Pages → resultados generados.
+CI → ejecución automática y despliegue.
+
+## Cómo ejecutar el proyecto
+
+Desde la raíz del repositorio:
+
+```bash
+pip install -r requirements.txt
+python -m src.main
+
+Esto genera:
+
+outputs/
+    tables/
+    figures/
+INFORME_FINAL.md
 
 Cada git push:
 
@@ -87,21 +100,4 @@ Genera los resultados.
 Construye el sitio en site/.
 Publica automáticamente en GitHub Pages.
 
-** Sitio web:
-https://gtomaino58.github.io/titanic-polars-ci/
-
- ** Restricciones cumplidas
-
-No se utiliza pandas
-No se utiliza Jupyter Notebook
-Programa Python ejecutable
-Resultados reproducibles
-Entrega en formato .py + .txt / .md
-
-** Nota final
-
-El proyecto sigue el principio de separación:
-Repositorio → código fuente e informes.
-GitHub Pages → resultados generados.
-CI → ejecución automática y despliegue.
-
+Sitio web: https://gtomaino58.github.io/titanic-polars-ci/
