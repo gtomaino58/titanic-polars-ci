@@ -11,8 +11,6 @@ El proyecto genera automáticamente:
 
 Además, dispone de integración continua (GitHub Actions) y despliegue automático en GitHub Pages.
 
----
-
 ## Cómo ejecutar el proyecto
 
 Desde la raíz del repositorio:
@@ -28,9 +26,7 @@ outputs/
     figures/
 INFORME_FINAL.md
 
----
-
-# Tecnologías utilizadas
+## Tecnologías utilizadas
 
 Python 3.11
 Polars (en lugar de pandas)
@@ -39,7 +35,7 @@ SciPy (para estimación de densidad KDE)
 GitHub Actions (CI)
 GitHub Pages (publicación automática)
 
-# Estructura del proyecto
+## Estructura del proyecto
 
 src/
     main.py
