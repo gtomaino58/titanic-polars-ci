@@ -22,24 +22,24 @@ GitHub Pages (publicación automática)
 
 ## Estructura del proyecto
 
-src/
-    main.py
-    ejercicio1.py
-    ejercicio2.py
-    plots.py
-    io_utils.py
-    tools/
-        csv_to_html.py
-        make_figures_index.py
-        make_tables_index.py
+* src/
+*    main.py
+*    ejercicio1.py
+*    ejercicio2.py
+*    plots.py
+*    io_utils.py
+*    tools/
+*        csv_to_html.py
+*        make_figures_index.py
+*        make_tables_index.py
 
-data/
-    titanic.csv
-    pasajeros.csv
-    supervivientes.csv
+* data/
+*     titanic.csv
+*     pasajeros.csv
+*     supervivientes.csv
 
-.github/workflows/
-    ci.yml
+*.github/workflows/
+*    ci.yml
 
 ## Ejercicio 1 – Titanic clásico
 
