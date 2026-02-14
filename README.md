@@ -28,6 +28,8 @@ outputs/
     figures/
 INFORME_FINAL.md
 
+---
+
 ## Tecnologías utilizadas
 
 Python 3.11
